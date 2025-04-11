@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/background_dark"
+    android:layout_gravity="center">
+
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Название"
+        android:textColor="@color/text_light"
+        android:textColorHint="@color/text_light_secondary"
+        android:backgroundTint="@color/burgundy_light"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Описание"
+        android:textColor="@color/text_light"
+        android:textColorHint="@color/text_light_secondary"
+        android:backgroundTint="@color/burgundy_light"
+        android:layout_marginBottom="8dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerGenre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/burgundy_light"/>
+
+    <Spinner
+        android:id="@+id/spinnerContentType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/burgundy_light"/>
+
+    <EditText
+        android:id="@+id/editTextImageUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ссылка на изображение"
+        android:textColor="@color/text_light"
+        android:textColorHint="@color/text_light_secondary"
+        android:backgroundTint="@color/burgundy_light"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextTrailerUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ссылка на трейлер"
+        android:textColor="@color/text_light"
+        android:textColorHint="@color/text_light_secondary"
+        android:backgroundTint="@color/burgundy_light"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сохранить"
+        android:backgroundTint="@color/burgundy_primary"
+        android:textColor="@color/text_light"/>
+</LinearLayout>

@@ -1,0 +1,29 @@
+ {
+  "project_info": {
+    "project_number": "413427492474",
+    "project_id": "guide-adba7",
+    "storage_bucket": "guide-adba7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413427492474:android:f89c78cc7d90e89c333dc3",
+        "android_client_info": {
+          "package_name": "com.example.movieguide"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQWj6lqgyvwUXyJWo9NcW2YeMZZdXlF10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

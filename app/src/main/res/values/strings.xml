@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MOVIEGuide</string>
+    <string name="content_description_poster">Постер фильма</string>
+    <string name="back">Назад</string>
+    <string name="favorite">В избранное</string>
+    <string name="watch_trailer">Смотреть трейлер</string>
+    <string name="reviews">Отзывы</string>
+    <string name="no_reviews">Отзывов пока нет</string>
+</resources>

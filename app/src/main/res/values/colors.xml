@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="burgundy_primary">#800020</color>
+    <color name="burgundy_dark">#500014</color>
+    <color name="burgundy_light">#A3002A</color>
+    <color name="burgundy_primary_alpha20">#33800020</color>
+    <color name="background_dark">#121212</color>
+    <color name="card_dark">#1E1E1E</color>
+    <color name="divider_dark">#1F1F1F</color>
+    <color name="text_light">#FFFFFF</color>
+    <color name="text_light_secondary">#B3FFFFFF</color>
+    <color name="accent_red">#FF5252</color>
+    <color name="accent_green">#4CAF50</color>
+    <color name="ripple_color_light">#1AFFFFFF</color>
+    <color name="icon_tint_active">#800020</color>
+    <color name="icon_tint_inactive">#5C5C5C</color> 
+    <color name="surface_dark">#1E1E1E</color>
+    <color name="background_input">#1E1E1E</color>
+    <color name="border_color">#333333</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_hint">#B3FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="primary_color">#800020</color>
+    <color name="gray">#424242</color>
+</resources>

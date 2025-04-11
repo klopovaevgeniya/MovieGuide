@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/burgundy_primary"
+    android:elevation="8dp">
+
+    <ImageView
+        android:id="@+id/nav_home"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_home"
+        android:contentDescription="Главная"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@color/text_light" />
+
+    <ImageView
+        android:id="@+id/nav_favorites"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_favorite"
+        android:contentDescription="Избранное"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@color/text_light" />
+
+    <ImageView
+        android:id="@+id/nav_profile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_profile"
+        android:contentDescription="Профиль"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@color/text_light" />
+</LinearLayout>
