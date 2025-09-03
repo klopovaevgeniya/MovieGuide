@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -98,15 +100,51 @@ public class ReviewsFragment extends Fragment {
                 .addOnSuccessListener(documentSnapshot -> {
                     User user = documentSnapshot.toObject(User.class);
                     if (user != null) {
-                        new AlertDialog.Builder(requireContext())
+                        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                                 .setTitle("Выслать предупреждение")
                                 .setMessage("Вы уверены, что хотите выслать предупреждение на почту " + user.getEmail() + "?")
-                                .setPositiveButton("Да", (dialog, which) -> {
+                                .setPositiveButton("Да", (dialogInterface, which) -> {
                                     sendWarningEmail(user.getName(), user.getEmail());
                                     deleteReview(review, position);
                                 })
                                 .setNegativeButton("Нет", null)
-                                .show();
+                                .create();
+
+                        dialog.setOnShowListener(dialogInterface -> {
+                            View background = dialog.getWindow().getDecorView().getRootView();
+                            background.setBackgroundColor(getResources().getColor(R.color.background_dark));
+
+                            int titleId = getResources().getIdentifier("alertTitle", "id", "android");
+                            if (titleId > 0) {
+                                TextView titleView = dialog.findViewById(titleId);
+                                if (titleView != null) {
+                                    titleView.setTextColor(getResources().getColor(R.color.text_light));
+                                }
+                            }
+
+                            TextView messageView = dialog.findViewById(android.R.id.message);
+                            if (messageView != null) {
+                                messageView.setTextColor(getResources().getColor(R.color.text_light));
+                            }
+
+                            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            positiveButton.setTextColor(getResources().getColor(R.color.white));
+                            positiveButton.setBackgroundColor(getResources().getColor(R.color.burgundy_primary));
+
+                            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                            negativeButton.setTextColor(getResources().getColor(R.color.white));
+                            negativeButton.setBackgroundColor(getResources().getColor(R.color.burgundy_primary));
+
+                            int dividerId = getResources().getIdentifier("titleDivider", "id", "android");
+                            if (dividerId > 0) {
+                                View divider = dialog.findViewById(dividerId);
+                                if (divider != null) {
+                                    divider.setBackgroundColor(getResources().getColor(R.color.burgundy_primary));
+                                }
+                            }
+                        });
+
+                        dialog.show();
                     } else {
                         Toast.makeText(getContext(), "Пользователь не найден", Toast.LENGTH_SHORT).show();
                     }

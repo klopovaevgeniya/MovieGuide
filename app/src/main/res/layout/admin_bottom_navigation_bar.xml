@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -16,7 +17,7 @@
         android:padding="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:tint="@color/text_light"/>
+        app:tint="@color/text_light" />
 
     <ImageView
         android:id="@+id/nav_genre"
@@ -28,7 +29,19 @@
         android:padding="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:tint="@color/text_light"/>
+        app:tint="@color/text_light" />
+
+    <ImageView
+        android:id="@+id/nav_analitik"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_analitik"
+        android:contentDescription="Аналитика"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@color/text_light" />
 
     <ImageView
         android:id="@+id/nav_reviews"
@@ -40,7 +53,7 @@
         android:padding="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:tint="@color/text_light"/>
+        app:tint="@color/text_light" />
 
     <ImageView
         android:id="@+id/nav_users"
@@ -52,7 +65,5 @@
         android:padding="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:tint="@color/text_light"/>
-
-
+        app:tint="@color/text_light" />
 </LinearLayout>

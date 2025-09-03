@@ -4,10 +4,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -39,6 +44,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         holder.title.setText(content.getTitle());
 
+        if (content.getImageUrl() != null && !content.getImageUrl().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(content.getImageUrl())
+                    .apply(new RequestOptions()
+                            .transform(new RoundedCorners(16))
+                            .placeholder(R.drawable.placeholder_poster)
+                            .error(R.drawable.placeholder_poster))
+                    .into(holder.posterImage);
+        } else {
+            holder.posterImage.setImageResource(R.drawable.placeholder_poster);
+        }
+
         holder.itemView.setOnClickListener(v -> {
             if (clickListener != null) {
                 clickListener.onHistoryItemClicked(content);
@@ -64,18 +81,22 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView title;
+        ImageView posterImage;
         ImageButton removeBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.history_item_title);
+            posterImage = itemView.findViewById(R.id.history_item_image);
             removeBtn = itemView.findViewById(R.id.history_remove_btn);
         }
     }
+
     public void updateContentRating(String contentId, float newRating) {
-        for (Content content : contents) {
-            if (content.getId().equals(contentId)) {
-                notifyDataSetChanged();
+        for (int i = 0; i < contents.size(); i++) {
+            if (contents.get(i).getId().equals(contentId)) {
+                contents.get(i).setSumRatings((long) newRating);
+                notifyItemChanged(i);
                 break;
             }
         }

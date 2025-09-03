@@ -20,14 +20,14 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     interface FavoriteClickListener {
         void onFavoriteClicked(Content content);
-        void onAddToHistoryClicked(Content content); // Добавлен отдельный метод для истории
+        void onAddToHistoryClicked(Content content);
     }
 
     private List<Content> contents;
     private FavoriteClickListener listener;
 
     public FavoritesAdapter(List<Content> contents, FavoriteClickListener listener) {
-        this.contents = new ArrayList<>(contents); // Защитная копия
+        this.contents = new ArrayList<>(contents);
         this.listener = listener;
     }
 
@@ -76,18 +76,15 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         }
 
         public void bind(Content content, FavoriteClickListener listener) {
-            // Установка текстовых значений
             textViewTitle.setText(content.getTitle());
             textViewGenre.setText(content.getGenre());
             textViewRating.setText(String.format("Рейтинг: %.1f", content.getRating()));
             textViewType.setText(String.format("Тип: %s", content.getContentType()));
 
-            // Загрузка изображения с обработкой ошибок
             Glide.with(itemView.getContext())
                     .load(content.getImageUrl())
                     .into(imageView);
 
-            // Обработчики кликов
             btnRemove.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onFavoriteClicked(content);
@@ -96,7 +93,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
             btnAddToHistory.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onAddToHistoryClicked(content); // Используем новый метод
+                    listener.onAddToHistoryClicked(content);
                 }
             });
 

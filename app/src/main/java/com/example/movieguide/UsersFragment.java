@@ -1,6 +1,7 @@
 package com.example.movieguide;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class UsersFragment extends Fragment {
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
@@ -53,6 +55,7 @@ public class UsersFragment extends Fragment {
         emptyView.setVisibility(View.GONE);
 
         db.collection("users")
+                .whereEqualTo("role", "user")
                 .get()
                 .addOnCompleteListener(task -> {
                     progressBar.setVisibility(View.GONE);
@@ -75,8 +78,9 @@ public class UsersFragment extends Fragment {
                         }
                     } else {
                         emptyView.setVisibility(View.VISIBLE);
-                        emptyView.setText("Ошибка загрузки: " + task.getException().getMessage());
-                        Toast.makeText(getContext(), "Ошибка загрузки", Toast.LENGTH_SHORT).show();
+                        emptyView.setText("Ошибка загрузки");
+                        Toast.makeText(getContext(), "Ошибка загрузки пользователей", Toast.LENGTH_SHORT).show();
+                        Log.e("UsersFragment", "Error loading users", task.getException());
                     }
                 });
     }

@@ -7,7 +7,6 @@
     android:background="@color/background_dark"
     android:padding="24dp">
 
-    <!-- Приветствие -->
     <TextView
         android:id="@+id/textViewGreeting"
         android:layout_width="match_parent"
@@ -19,7 +18,6 @@
         android:layout_marginBottom="32dp"
         android:fontFamily="sans-serif-medium"/>
 
-    <!-- Основные пункты меню -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,13 +58,11 @@
                     android:layout_marginStart="16dp"/>
             </LinearLayout>
 
-            <!-- Разделитель -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/divider_dark"/>
 
-            <!-- Уведомления -->
             <LinearLayout
                 android:id="@+id/notificationsItem"
                 android:layout_width="match_parent"
@@ -95,7 +91,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Добавить этот CardView после первого CardView и перед CardView с выходом -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -131,38 +126,86 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Выход -->
-    <androidx.cardview.widget.CardView
+    <!-- Добавляем Space для заполнения пустого места -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- Новый блок для Правил приложения и Выхода -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/card_dark"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="0dp">
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
 
-        <LinearLayout
-            android:id="@+id/logoutItem"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
+            app:cardBackgroundColor="@color/card_dark"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            android:layout_marginBottom="8dp">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_logout"
-                app:tint="@color/burgundy_primary"/>
-
-            <TextView
-                android:id="@+id/textViewLogout"
+            <LinearLayout
+                android:id="@+id/rulesItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Выйти из профиля"
-                android:textSize="16sp"
-                android:textColor="@color/accent_red"
-                android:layout_marginStart="16dp"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_rules"
+                    app:tint="@color/burgundy_primary"/>
+
+                <TextView
+                    android:id="@+id/textViewRules"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Правила приложения"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_light"
+                    android:layout_marginStart="16dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/card_dark"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:id="@+id/logoutItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_logout"
+                    app:tint="@color/burgundy_primary"/>
+
+                <TextView
+                    android:id="@+id/textViewLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Выйти из профиля"
+                    android:textSize="16sp"
+                    android:textColor="@color/accent_red"
+                    android:layout_marginStart="16dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 </LinearLayout>

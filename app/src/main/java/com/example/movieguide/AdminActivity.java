@@ -2,12 +2,16 @@ package com.example.movieguide;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -18,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AdminActivity extends AppCompatActivity {
 
-    private ImageView navContent, navGenre, navReviews, navUsers;
+    private ImageView navContent, navGenre, navReviews, navUsers, navAnalitik;
     private ImageButton btnLogout;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -32,6 +36,7 @@ public class AdminActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        navAnalitik = findViewById(R.id.nav_analitik);
         navContent = findViewById(R.id.nav_content);
         navGenre = findViewById(R.id.nav_genre);
         navReviews = findViewById(R.id.nav_reviews);
@@ -44,18 +49,55 @@ public class AdminActivity extends AppCompatActivity {
         navGenre.setOnClickListener(v -> loadFragment(new GenresFragment()));
         navReviews.setOnClickListener(v -> loadFragment(new ReviewsFragment()));
         navUsers.setOnClickListener(v -> loadFragment(new UsersFragment()));
+        navAnalitik.setOnClickListener(v -> loadFragment(new AnalitikFragment()));
 
         btnLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
     }
 
     private void showLogoutConfirmationDialog() {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Подтверждение выхода")
                 .setMessage("Вы уверены, что хотите выйти из аккаунта?")
-                .setPositiveButton("Выйти", (dialog, which) -> logoutUser())
+                .setPositiveButton("Выйти", (dialogInterface, which) -> logoutUser())
                 .setNegativeButton("Отмена", null)
                 .setCancelable(true)
-                .show();
+                .create();
+
+        dialog.setOnShowListener(dialogInterface -> {
+            View background = dialog.getWindow().getDecorView().getRootView();
+            background.setBackgroundColor(ContextCompat.getColor(this, R.color.background_dark));
+
+            int titleId = getResources().getIdentifier("alertTitle", "id", "android");
+            if (titleId > 0) {
+                TextView titleView = dialog.findViewById(titleId);
+                if (titleView != null) {
+                    titleView.setTextColor(ContextCompat.getColor(this, R.color.text_light));
+                }
+            }
+
+            TextView messageView = dialog.findViewById(android.R.id.message);
+            if (messageView != null) {
+                messageView.setTextColor(ContextCompat.getColor(this, R.color.text_light));
+            }
+
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            positiveButton.setTextColor(ContextCompat.getColor(this, R.color.white));
+            positiveButton.setBackgroundColor(ContextCompat.getColor(this, R.color.burgundy_primary));
+
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            negativeButton.setTextColor(ContextCompat.getColor(this, R.color.white));
+            negativeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.burgundy_primary));
+
+            int dividerId = getResources().getIdentifier("titleDivider", "id", "android");
+            if (dividerId > 0) {
+                View divider = dialog.findViewById(dividerId);
+                if (divider != null) {
+                    divider.setBackgroundColor(ContextCompat.getColor(this, R.color.burgundy_primary));
+                }
+            }
+        });
+
+        dialog.show();
     }
 
     private void logoutUser() {

@@ -52,7 +52,6 @@ public class ContentDetailActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Инициализация существующих view
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewDescription = findViewById(R.id.textViewDescription);
         textViewGenre = findViewById(R.id.textViewGenre);
@@ -62,11 +61,9 @@ public class ContentDetailActivity extends AppCompatActivity {
         ibFavorite = findViewById(R.id.ibFavorite);
         btnTrailer = findViewById(R.id.btnTrailer);
 
-        // Инициализация новых view для отзывов
         tvNoReviews = findViewById(R.id.tvNoReviews);
         rvReviews = findViewById(R.id.rvReviews);
 
-        // Настройка RecyclerView
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
         reviewAdapter = new ReviewAdapter(reviewList);
         rvReviews.setAdapter(reviewAdapter);
@@ -238,6 +235,35 @@ public class ContentDetailActivity extends AppCompatActivity {
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(this, "Не удалось открыть трейлер", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void checkUserRoleAndSetupUI(String userId) {
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+
+                        String role = documentSnapshot.getString("role");
+                        if (role == null) role = "user";
+
+                        setupUIForRole(role);
+
+                        startActivity(new Intent(this,
+                                "admin".equals(role) ? AdminActivity.class : MainActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Данные пользователя не найдены", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Ошибка загрузки данных", Toast.LENGTH_SHORT).show();
+                    Log.e("LoginActivity", "Error loading user data", e);
+                });
+    }
+
+    private void setupUIForRole(String role) {
+        ImageButton favoriteButton = findViewById(R.id.ibFavorite);
+        if (favoriteButton != null) {
+            favoriteButton.setVisibility("user".equals(role) ? View.VISIBLE : View.GONE);
         }
     }
 }

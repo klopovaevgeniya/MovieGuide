@@ -16,7 +16,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment {
 
-    private TextView textViewGreeting, textViewHistory, textViewNotifications, textViewLogout;
+    private TextView textViewGreeting, textViewHistory, textViewNotifications,
+            textViewLogout, textViewRules;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private View view;
@@ -43,6 +44,7 @@ public class ProfileFragment extends Fragment {
         textViewHistory = view.findViewById(R.id.textViewHistory);
         textViewNotifications = view.findViewById(R.id.textViewNotifications);
         textViewLogout = view.findViewById(R.id.textViewLogout);
+        textViewRules = view.findViewById(R.id.textViewRules);
     }
 
     private void loadUserData() {
@@ -92,6 +94,11 @@ public class ProfileFragment extends Fragment {
             } else {
                 showToast("Войдите в аккаунт для редактирования профиля");
             }
+        });
+
+        // Добавляем обработчик для Правил приложения
+        textViewRules.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), AppRulesActivity.class));
         });
     }
 

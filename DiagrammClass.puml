@@ -1,0 +1,676 @@
+@startuml
+class com.example.movieguide.RegistrationActivity {
+- EditText editTextEmail
+- Button buttonRegister
+- FirebaseAuth auth
+- FirebaseFirestore db
+- {static} Pattern PASSWORD_PATTERN
+# void onCreate(Bundle)
++ void onLoginClick(View)
+- void registerUser()
+- boolean validateName(String)
+- boolean validateEmail(String)
+- boolean validatePassword(String)
+- void checkIfUserExists(String,String,String)
+- void createUser(String,String,String)
+- void saveUserToFirestore(User)
+- void showAppRulesDialog()
+- void showBlockedDialog()
+}
+
+
+class com.example.movieguide.FavoritesFragment {
+- RecyclerView recyclerView
+- TextView emptyStateText
+- FavoritesAdapter adapter
+- List<Content> favoriteContents
+- FirebaseFirestore db
+- FirebaseAuth auth
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
++ void onStart()
+- void checkAuthAndLoad()
+- void loadFavorites()
+- void loadContentDetails(List<String>)
+- void removeFromFavorites(Content)
+- void addToHistory(Content)
+- void showEmptyState(String)
+- void showContentList()
+}
+
+
+class com.example.movieguide.MainActivity {
+- ImageView navHome
+- FirebaseAuth mAuth
+- FirebaseFirestore db
+# void onCreate(Bundle)
+- void loadFragment(Fragment)
+}
+
+
+class com.example.movieguide.AnalitikFragment {
+- {static} String TAG
+- Button btnSelectContent
+- RecyclerView statsRecyclerView
+- LineChart chart
+- FirebaseFirestore db
+- StatsAdapter statsAdapter
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void setupRecyclerView()
+- void setupChart()
+- void showContentSelectionDialog()
+- void loadContentStats(String)
+- void createStatsFromReviews(String)
+- void loadReviewsForChart(String)
+- void showRatingChart(List<Entry>)
+- void showNoDataMessage()
+}
+
+
+class com.example.movieguide.Stats {
+- String id
+- String contentId
+- String contentTitle
+- String date
+- int rating1Count
+- int rating2Count
+- int rating3Count
+- int rating4Count
+- int rating5Count
++ String getId()
++ void setId(String)
++ String getContentId()
++ void setContentId(String)
++ String getContentTitle()
++ void setContentTitle(String)
++ String getDate()
++ void setDate(String)
++ int getRating1Count()
++ void setRating1Count(int)
++ int getRating2Count()
++ void setRating2Count(int)
++ int getRating3Count()
++ void setRating3Count(int)
++ int getRating4Count()
++ void setRating4Count(int)
++ int getRating5Count()
++ void setRating5Count(int)
++ void addRating(int)
++ int getTotalRatings()
++ float getAverageRating()
++ List<Float> getRatingDistribution()
+}
+
+
+class com.example.movieguide.ProfileFragment {
+- TextView textViewGreeting
+- FirebaseFirestore db
+- FirebaseAuth mAuth
+- View view
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void initViews()
+- void loadUserData()
+- void setupClickListeners()
+- void showNotificationConfirmationDialog()
+- void showLogoutConfirmationDialog()
+- void redirectToLogin()
+- void showToast(String)
+}
+
+
+class com.example.movieguide.User {
+- String userId
+- String email
+- String name
+- String role
+- boolean isBlocked
++ String getUserId()
++ void setUserId(String)
++ String getEmail()
++ void setEmail(String)
++ String getName()
++ void setName(String)
++ String getRole()
++ void setRole(String)
++ boolean isBlocked()
++ void setBlocked(boolean)
+}
+
+
+class com.example.movieguide.FavoritesAdapter {
+- List<Content> contents
+- FavoriteClickListener listener
++ void updateContents(List<Content>)
++ ViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ViewHolder,int)
++ int getItemCount()
+}
+
+
+interface com.example.movieguide.FavoritesAdapter$FavoriteClickListener {
+~ void onFavoriteClicked(Content)
+~ void onAddToHistoryClicked(Content)
+}
+
+class com.example.movieguide.FavoritesAdapter$ViewHolder {
+- ImageView imageView
+- TextView textViewTitle
+- TextView textViewGenre
+- TextView textViewRating
+- TextView textViewType
+- Button btnRemove
+- Button btnAddToHistory
++ void bind(Content,FavoriteClickListener)
+}
+
+
+class com.example.movieguide.UserAdapter {
+- Context context
+- List<User> userList
+- ExecutorService executorService
+- FirebaseFirestore db
++ UserViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(UserViewHolder,int)
+- void showBlockUserDialog(User,int)
+- void showUnblockUserDialog(User,int)
+- void styleDialog(AlertDialog)
+- void blockUser(User,int)
+- void unblockUser(User,int)
+- void sendWarningEmail(String,String,boolean)
++ int getItemCount()
++ void onDetachedFromRecyclerView(RecyclerView)
+}
+
+
+class com.example.movieguide.UserAdapter$UserViewHolder {
+~ TextView textViewName
+~ Button buttonBlock
+}
+
+class com.example.movieguide.ContentFragment {
+- RecyclerView recyclerView
+- ContentAdapter contentAdapter
+- List<Content> contentList
+- FirebaseFirestore db
+- Button buttonAddContent
+- boolean isAdmin
+- List<String> genreList
+- List<String> contentTypeList
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void loadContentFromFirestore()
+- void loadGenresFromFirestore()
++ void onEditContent(Content)
++ void onDeleteContent(Content)
+- void showAddContentDialog()
+- void addContentToFirestore(String,String,String,String,String,String)
+- void showEditContentDialog(Content)
+- void updateContentInFirestore(String,String,String,String,String,String,String)
+- void showDeleteConfirmationDialog(Content)
+- void deleteContentFromFirestore(Content)
++ void onContentClick(Content)
+}
+
+
+class com.example.movieguide.LoginActivity {
+- EditText editTextEmail
+- Button buttonLogin
+- FirebaseAuth auth
+- FirebaseFirestore db
+# void onCreate(Bundle)
++ void onRegisterClick(android.view.View)
+- void loginUser()
+- void checkUserRoleAndBlockStatus(String)
+- void showBlockedDialog()
+}
+
+
+class com.example.movieguide.History {
+- String userId
+- String contentId
++ String getUserId()
++ void setUserId(String)
++ String getContentId()
++ void setContentId(String)
+}
+
+
+class com.example.movieguide.ReviewsFragment {
+- RecyclerView recyclerView
+- ReviewAdapter reviewAdapter
+- List<Review> reviewList
+- FirebaseFirestore db
+- FirebaseAuth auth
+- ExecutorService executorService
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void checkAdminAndShowDialog(Review,int)
+- void loadReviews()
+- void showWarningDialog(Review,int)
+- void deleteReview(Review,int)
+- void sendWarningEmail(String,String)
++ void onDestroy()
+}
+
+
+class com.example.movieguide.RecomendationAdapter {
+- List<Content> contentList
+- OnRecommendationClickListener listener
++ RecommendationViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(RecommendationViewHolder,int)
++ int getItemCount()
+}
+
+
+interface com.example.movieguide.RecomendationAdapter$OnRecommendationClickListener {
+~ void onRecommendationClick(Content)
+}
+
+class com.example.movieguide.RecomendationAdapter$RecommendationViewHolder {
+~ ImageView posterImageView
+~ TextView titleTextView
+~ TextView ratingTextView
+}
+
+class com.example.movieguide.StatsAdapter {
+- List<Stats> statsList
+- StatsClickListener clickListener
++ void updateStats(List<Stats>)
++ StatsViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(StatsViewHolder,int)
++ int getItemCount()
+}
+
+
+class com.example.movieguide.StatsAdapter$StatsViewHolder {
+~ TextView tvContentName
+~ TextView tvDate
+}
+
+interface com.example.movieguide.StatsAdapter$StatsClickListener {
+~ void onStatsClick(Stats)
+}
+
+class com.example.movieguide.AdminActivity {
+- ImageView navContent
+- ImageButton btnLogout
+- FirebaseAuth mAuth
+- FirebaseFirestore db
+# void onCreate(Bundle)
+- void showLogoutConfirmationDialog()
+- void logoutUser()
+- void redirectToLogin()
+- void loadFragment(Fragment)
+}
+
+
+class com.example.movieguide.RecomendationsFragment {
+- RecyclerView recommendationsRecyclerView
+- TextView recommendationsTitle
+- RecomendationAdapter adapter
+- List<Content> recommendedContentList
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+- void setupRecyclerView()
+- void loadRecommendedContent()
+}
+
+
+class com.example.movieguide.HistoryActivity {
+- RecyclerView recyclerView
+- TextView emptyStateText
+- HistoryAdapter adapter
+- List<Content> historyContents
+- FirebaseFirestore db
+- FirebaseAuth auth
+- ContentAdapter contentAdapter
+# void onCreate(Bundle)
+- void loadHistory()
+- void loadContentDetails(List<String>)
+- void showDeleteConfirmationDialog(Content)
+- void removeFromHistory(Content)
+- void showClearHistoryDialog()
+- void clearAllHistory()
+- void showReviewDialog(Content)
+- void showReviewInputDialog(Content)
+- void saveReview(Content,String,float)
+- void updateContentRating(String,float)
+- void showEmptyState(String)
+- void showContentList()
+- void updateContentStats(String,String,int,Context)
+}
+
+
+class com.example.movieguide.HomeFragment {
+- RecyclerView recyclerView
+- ContentAdapter contentAdapter
+- FirebaseFirestore db
+- List<Content> contentList
+- List<Content> filteredContentList
+- EditText searchEditText
+- TextView textViewNoResults
+- boolean isAdmin
+- ImageButton filterButton
+- View overlayView
+- LinearLayout filtersMenu
+- Button applyFiltersButton
+- Button resetFiltersButton
+- SeekBar ratingSeekBar
+- TextView ratingValueText
+- CheckBox checkBoxAllGenres
+- CheckBox checkBoxAllTypes
+- LinearLayout genresContainer
+- LinearLayout typesContainer
+- List<String> genreList
+- List<String> contentTypeList
+- List<CheckBox> genreCheckBoxes
+- List<CheckBox> typeCheckBoxes
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void initViews(View)
+- void setupListeners()
+- void toggleFiltersMenu()
+- void setupGenreCheckboxes()
+- void setupTypeCheckboxes()
+- void checkIfFiltersChanged()
+- void applyFilters()
+- void resetFilters()
+- void loadContent()
+- void loadGenres()
+- void filterContent(String)
+- void checkIfEmpty()
++ void onEditContent(Content)
++ void onDeleteContent(Content)
++ void onContentClick(Content)
+}
+
+
+class com.example.movieguide.Review {
+- String id
+- String contentId
+- String userName
+- String userId
+- String reviewText
+- float rating
+- Timestamp timestamp
++ String getId()
++ void setId(String)
++ String getContentId()
++ void setContentId(String)
++ String getUserName()
++ void setUserName(String)
++ String getUserId()
++ void setUserId(String)
++ String getReviewText()
++ void setReviewText(String)
++ float getRating()
++ void setRating(float)
++ Timestamp getTimestamp()
++ void setTimestamp(Timestamp)
+}
+
+
+class com.example.movieguide.ReviewAdapter {
+- List<Review> reviews
+- OnItemClickListener onItemClickListener
++ void setOnItemClickListener(OnItemClickListener)
++ ReviewViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ReviewViewHolder,int)
++ int getItemCount()
+}
+
+
+class com.example.movieguide.ReviewAdapter$ReviewViewHolder {
+~ TextView userNameTextView
+~ TextView reviewTextView
+~ RatingBar ratingBar
+}
+
+interface com.example.movieguide.ReviewAdapter$OnItemClickListener {
+~ void onItemClick(int,Review)
+}
+
+class com.example.movieguide.GenreAdapter {
+- List<Genre> genres
+- OnGenreClickListener listener
++ GenreViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(GenreViewHolder,int)
++ int getItemCount()
+}
+
+
+class com.example.movieguide.GenreAdapter$GenreViewHolder {
+- TextView genreName
+- Button editButton
+- Button deleteButton
++ void bind(Genre,OnGenreClickListener)
+}
+
+
+interface com.example.movieguide.GenreAdapter$OnGenreClickListener {
+~ void onEditClick(Genre)
+~ void onDeleteClick(Genre)
+}
+
+class com.example.movieguide.ContentAdapter {
+- Context context
+- List<Content> contentList
+- OnContentActionListener actionListener
+- boolean isAdmin
++ ContentViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ContentViewHolder,int)
++ int getItemCount()
++ void updateContentList(List<Content>)
+}
+
+
+class com.example.movieguide.ContentAdapter$ContentViewHolder {
+~ TextView textViewTitle
+~ ImageView imageView
+~ Button buttonEdit
+}
+
+interface com.example.movieguide.ContentAdapter$OnContentActionListener {
+~ void onEditContent(Content)
+~ void onDeleteContent(Content)
+~ void onContentClick(Content)
+}
+
+class com.example.movieguide.Favorite {
+- String userId
+- String contentId
++ String getUserId()
++ void setUserId(String)
++ String getContentId()
++ void setContentId(String)
+}
+
+
+class com.example.movieguide.UsersFragment {
+- RecyclerView recyclerView
+- UserAdapter userAdapter
+- List<User> userList
+- FirebaseFirestore db
+- ProgressBar progressBar
+- TextView emptyView
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void loadUsers()
++ void onDestroyView()
+}
+
+
+class com.example.movieguide.ContentDetailActivity {
+- TextView textViewTitle
+- ImageView imageView
+- ImageButton ibBack
+- Button btnTrailer
+- RecyclerView rvReviews
+- boolean isFavorite
+- Content content
+- FirebaseFirestore db
+- FirebaseUser currentUser
+- ReviewAdapter reviewAdapter
+- List<Review> reviewList
+# void onCreate(Bundle)
+- void loadReviews()
+- void checkIfFavorite()
+- void saveToFavorites()
+- void removeFromFavorites()
+- void updateFavoriteIcon()
+- void showTrailer(String)
+- void checkUserRoleAndSetupUI(String)
+- void setupUIForRole(String)
+}
+
+
+class com.example.movieguide.Content {
+- String id
+- String title
+- String description
+- String genre
+- String imageUrl
+- String trailerUrl
+- String contentType
+- long sumRatings
+- long totalRatings
++ String getId()
++ void setId(String)
++ String getTitle()
++ void setTitle(String)
++ String getDescription()
++ void setDescription(String)
++ String getGenre()
++ void setGenre(String)
++ String getImageUrl()
++ void setImageUrl(String)
++ String getTrailerUrl()
++ void setTrailerUrl(String)
++ String getContentType()
++ void setContentType(String)
++ long getSumRatings()
++ void setSumRatings(long)
++ long getTotalRatings()
++ void setTotalRatings(long)
++ float getRating()
+}
+
+
+class com.example.movieguide.AppRulesActivity {
+# void onCreate(Bundle)
+}
+
+class com.example.movieguide.ProfileActivity {
+- EditText editTextName
+- Button buttonChangePassword
+- ImageButton backButton
+- FirebaseAuth mAuth
+- FirebaseFirestore db
+# void onCreate(Bundle)
++ void onBackPressed()
+- boolean hasChanges()
+- void showUnsavedChangesDialog()
+- void loadUserData()
+- void showChangePasswordDialog()
+- void saveProfile()
+}
+
+
+class com.example.movieguide.Genre {
+- String id
+- String name
++ String getId()
++ void setId(String)
++ String getName()
++ void setName(String)
+}
+
+
+class com.example.movieguide.GenresFragment {
+- FirebaseFirestore firestore
+- GenreAdapter adapter
+- List<Genre> genres
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void loadGenres()
+- void showAddGenreDialog()
+- void addGenre(String)
+- void showEditGenreDialog(Genre)
+- void updateGenre(Genre)
+- void showDeleteConfirmationDialog(Genre)
+- void deleteGenre(Genre)
+}
+
+
+class com.example.movieguide.HistoryAdapter {
+- List<Content> contents
+- HistoryClickListener clickListener
++ ViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ViewHolder,int)
++ int getItemCount()
++ void updateContents(List<Content>)
++ void updateContentRating(String,float)
+}
+
+
+interface com.example.movieguide.HistoryAdapter$HistoryClickListener {
+~ void onHistoryItemClicked(Content)
+~ void onRemoveFromHistoryClicked(Content)
+}
+
+class com.example.movieguide.HistoryAdapter$ViewHolder {
+~ TextView title
+~ ImageView posterImage
+~ ImageButton removeBtn
+}
+
+
+
+androidx.appcompat.app.AppCompatActivity <|-- com.example.movieguide.RegistrationActivity
+androidx.fragment.app.Fragment <|-- com.example.movieguide.FavoritesFragment
+androidx.appcompat.app.AppCompatActivity <|-- com.example.movieguide.MainActivity
+androidx.fragment.app.Fragment <|-- com.example.movieguide.AnalitikFragment
+androidx.fragment.app.Fragment <|-- com.example.movieguide.ProfileFragment
+com.example.movieguide.Adapter <|-- com.example.movieguide.FavoritesAdapter
+com.example.movieguide.FavoritesAdapter +.. com.example.movieguide.FavoritesAdapter$FavoriteClickListener
+com.example.movieguide.FavoritesAdapter +.. com.example.movieguide.FavoritesAdapter$ViewHolder
+com.example.movieguide.ViewHolder <|-- com.example.movieguide.FavoritesAdapter$ViewHolder
+com.example.movieguide.Adapter <|-- com.example.movieguide.UserAdapter
+com.example.movieguide.UserAdapter +.. com.example.movieguide.UserAdapter$UserViewHolder
+com.example.movieguide.ViewHolder <|-- com.example.movieguide.UserAdapter$UserViewHolder
+com.example.movieguide.OnContentActionListener <|.. com.example.movieguide.ContentFragment
+androidx.fragment.app.Fragment <|-- com.example.movieguide.ContentFragment
+androidx.appcompat.app.AppCompatActivity <|-- com.example.movieguide.LoginActivity
+androidx.fragment.app.Fragment <|-- com.example.movieguide.ReviewsFragment
+com.example.movieguide.Adapter <|-- com.example.movieguide.RecomendationAdapter
+com.example.movieguide.RecomendationAdapter +.. com.example.movieguide.RecomendationAdapter$OnRecommendationClickListener
+com.example.movieguide.RecomendationAdapter +.. com.example.movieguide.RecomendationAdapter$RecommendationViewHolder
+com.example.movieguide.ViewHolder <|-- com.example.movieguide.RecomendationAdapter$RecommendationViewHolder
+com.example.movieguide.Adapter <|-- com.example.movieguide.StatsAdapter
+com.example.movieguide.StatsAdapter +.. com.example.movieguide.StatsAdapter$StatsViewHolder
+com.example.movieguide.ViewHolder <|-- com.example.movieguide.StatsAdapter$StatsViewHolder
+com.example.movieguide.StatsAdapter +.. com.example.movieguide.StatsAdapter$StatsClickListener
+androidx.appcompat.app.AppCompatActivity <|-- com.example.movieguide.AdminActivity
+androidx.fragment.app.Fragment <|-- com.example.movieguide.RecomendationsFragment
+androidx.appcompat.app.AppCompatActivity <|-- com.example.movieguide.HistoryActivity
+com.example.movieguide.OnContentActionListener <|.. com.example.movieguide.HomeFragment
+androidx.fragment.app.Fragment <|-- com.example.movieguide.HomeFragment
+com.example.movieguide.Adapter <|-- com.example.movieguide.ReviewAdapter
+com.example.movieguide.ReviewAdapter +.. com.example.movieguide.ReviewAdapter$ReviewViewHolder
+com.example.movieguide.ViewHolder <|-- com.example.movieguide.ReviewAdapter$ReviewViewHolder
+com.example.movieguide.ReviewAdapter +.. com.example.movieguide.ReviewAdapter$OnItemClickListener
+com.example.movieguide.Adapter <|-- com.example.movieguide.GenreAdapter
+com.example.movieguide.GenreAdapter +.. com.example.movieguide.GenreAdapter$GenreViewHolder
+com.example.movieguide.ViewHolder <|-- com.example.movieguide.GenreAdapter$GenreViewHolder
+com.example.movieguide.GenreAdapter +.. com.example.movieguide.GenreAdapter$OnGenreClickListener
+com.example.movieguide.Adapter <|-- com.example.movieguide.ContentAdapter
+com.example.movieguide.ContentAdapter +.. com.example.movieguide.ContentAdapter$ContentViewHolder
+com.example.movieguide.ViewHolder <|-- com.example.movieguide.ContentAdapter$ContentViewHolder
+com.example.movieguide.ContentAdapter +.. com.example.movieguide.ContentAdapter$OnContentActionListener
+androidx.fragment.app.Fragment <|-- com.example.movieguide.UsersFragment
+androidx.appcompat.app.AppCompatActivity <|-- com.example.movieguide.ContentDetailActivity
+java.io.Serializable <|.. com.example.movieguide.Content
+androidx.appcompat.app.AppCompatActivity <|-- com.example.movieguide.AppRulesActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.movieguide.ProfileActivity
+androidx.fragment.app.Fragment <|-- com.example.movieguide.GenresFragment
+com.example.movieguide.Adapter <|-- com.example.movieguide.HistoryAdapter
+com.example.movieguide.HistoryAdapter +.. com.example.movieguide.HistoryAdapter$HistoryClickListener
+com.example.movieguide.HistoryAdapter +.. com.example.movieguide.HistoryAdapter$ViewHolder
+com.example.movieguide.ViewHolder <|-- com.example.movieguide.HistoryAdapter$ViewHolder
+@enduml

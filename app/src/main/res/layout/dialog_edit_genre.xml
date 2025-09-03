@@ -1,26 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/background_dark">
+    android:background="#000000">
 
     <EditText
         android:id="@+id/genreNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Название"
-        android:textColor="@color/text_light"
-        android:textColorHint="@color/text_light_secondary"
-        android:backgroundTint="@color/burgundy_light"
-        android:layout_marginBottom="8dp"/>
+        android:hint="Название жанра"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        android:backgroundTint="#FFFFFF"/>
 
     <Button
         android:id="@+id/saveButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Сохранить"
-        android:backgroundTint="@color/burgundy_primary"
-        android:textColor="@color/text_light"/>
+        android:background="#800020"
+        android:textColor="#FFFFFF"/>
 
 </LinearLayout>

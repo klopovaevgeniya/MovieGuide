@@ -5,7 +5,6 @@ public class Genre {
     private String name;
 
     public Genre() {
-        // Пустой конструктор необходим для Firestore
     }
 
     public Genre(String id, String name) {

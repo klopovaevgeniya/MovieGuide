@@ -40,7 +40,6 @@ public class HomeFragment extends Fragment implements ContentAdapter.OnContentAc
     private TextView textViewNoResults;
     private boolean isAdmin = false;
 
-    // Элементы фильтрации
     private ImageButton filterButton;
     private View overlayView;
     private LinearLayout filtersMenu;
@@ -63,16 +62,12 @@ public class HomeFragment extends Fragment implements ContentAdapter.OnContentAc
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Инициализация Firebase
         db = FirebaseFirestore.getInstance();
 
-        // Инициализация UI элементов
         initViews(view);
 
-        // Настройка слушателей
         setupListeners();
 
-        // Загрузка данных
         loadContent();
         loadGenres();
 
@@ -104,7 +99,6 @@ public class HomeFragment extends Fragment implements ContentAdapter.OnContentAc
     }
 
     private void setupListeners() {
-        // Поиск
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -118,13 +112,10 @@ public class HomeFragment extends Fragment implements ContentAdapter.OnContentAc
             public void afterTextChanged(Editable s) {}
         });
 
-        // Кнопка фильтра
         filterButton.setOnClickListener(v -> toggleFiltersMenu());
 
-        // Overlay
         overlayView.setOnClickListener(v -> toggleFiltersMenu());
 
-        // Кнопки фильтров
         applyFiltersButton.setOnClickListener(v -> {
             applyFilters();
             toggleFiltersMenu();
@@ -135,7 +126,6 @@ public class HomeFragment extends Fragment implements ContentAdapter.OnContentAc
             toggleFiltersMenu();
         });
 
-        // SeekBar // SeekBar рейтинга
         ratingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser ) {
@@ -147,7 +137,6 @@ public class HomeFragment extends Fragment implements ContentAdapter.OnContentAc
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        // Чекбоксы "Все жанры/типы"
         checkBoxAllGenres.setOnCheckedChangeListener((buttonView, isChecked) -> {
             for (CheckBox checkBox : genreCheckBoxes) {
                 checkBox.setChecked(isChecked);

@@ -8,6 +8,18 @@
     android:elevation="8dp">
 
     <ImageView
+        android:id="@+id/nav_rec"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_rec"
+        android:contentDescription="Профиль"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@color/text_light" />
+
+    <ImageView
         android:id="@+id/nav_home"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -42,4 +54,6 @@
         android:clickable="true"
         android:focusable="true"
         app:tint="@color/text_light" />
+
+
 </LinearLayout>

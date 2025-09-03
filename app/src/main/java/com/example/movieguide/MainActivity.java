@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView navHome, navFavorites, navProfile;
+    private ImageView navHome, navFavorites, navProfile, navRec;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
@@ -30,12 +30,14 @@ public class MainActivity extends AppCompatActivity {
         navHome = findViewById(R.id.nav_home);
         navFavorites = findViewById(R.id.nav_favorites);
         navProfile = findViewById(R.id.nav_profile);
+        navRec = findViewById(R.id.nav_rec);
 
         loadFragment(new HomeFragment());
 
         navHome.setOnClickListener(v -> loadFragment(new HomeFragment()));
         navFavorites.setOnClickListener(v -> loadFragment(new FavoritesFragment()));
         navProfile.setOnClickListener(v -> loadFragment(new ProfileFragment()));
+        navRec.setOnClickListener(v -> loadFragment(new RecomendationsFragment()));
     }
 
     private void loadFragment(Fragment fragment) {

@@ -1,6 +1,10 @@
 package com.example.movieguide;
 
 import android.app.AlertDialog;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,11 +79,28 @@ public class GenresFragment extends Fragment {
         EditText genreNameEditText = dialogView.findViewById(R.id.genreNameEditText);
         Button saveButton = dialogView.findViewById(R.id.saveButton);
 
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+        AlertDialog dialog = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog)
                 .setTitle("Добавить жанр")
                 .setView(dialogView)
                 .setNegativeButton("Отмена", null)
                 .create();
+
+        dialog.setOnShowListener(dialogInterface -> {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            if (negativeButton != null) {
+                negativeButton.setTextColor(Color.WHITE);
+                negativeButton.setBackgroundColor(Color.parseColor("#800020"));
+            }
+
+            saveButton.setTextColor(Color.WHITE);
+            saveButton.setBackgroundColor(Color.parseColor("#800020"));
+
+            genreNameEditText.setTextColor(Color.WHITE);
+            genreNameEditText.setHintTextColor(Color.GRAY);
+            genreNameEditText.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+        });
 
         saveButton.setOnClickListener(v -> {
             String name = genreNameEditText.getText().toString();
@@ -93,16 +114,29 @@ public class GenresFragment extends Fragment {
     }
 
     private void addGenre(String name) {
-        Genre genre = new Genre(null, name);
         firestore.collection("genres")
-                .add(genre)
-                .addOnSuccessListener(documentReference -> {
-                    genre.setId(documentReference.getId());
-                    genres.add(genre);
-                    adapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Ошибка добавления жанра: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                .whereEqualTo("name", name)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            Toast.makeText(getContext(), "Жанр с таким названием уже существует", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Genre genre = new Genre(null, name);
+                            firestore.collection("genres")
+                                    .add(genre)
+                                    .addOnSuccessListener(documentReference -> {
+                                        genre.setId(documentReference.getId());
+                                        genres.add(genre);
+                                        adapter.notifyDataSetChanged();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(getContext(), "Ошибка добавления жанра: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Ошибка проверки жанра: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 
@@ -112,11 +146,28 @@ public class GenresFragment extends Fragment {
         Button saveButton = dialogView.findViewById(R.id.saveButton);
         genreNameEditText.setText(genre.getName());
 
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+        AlertDialog dialog = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog)
                 .setTitle("Редактировать жанр")
                 .setView(dialogView)
                 .setNegativeButton("Отмена", null)
                 .create();
+
+        dialog.setOnShowListener(dialogInterface -> {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            if (negativeButton != null) {
+                negativeButton.setTextColor(Color.WHITE);
+                negativeButton.setBackgroundColor(Color.parseColor("#800020"));
+            }
+
+            saveButton.setTextColor(Color.WHITE);
+            saveButton.setBackgroundColor(Color.parseColor("#800020"));
+
+            genreNameEditText.setTextColor(Color.WHITE);
+            genreNameEditText.setHintTextColor(Color.GRAY);
+            genreNameEditText.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+        });
 
         saveButton.setOnClickListener(v -> {
             String newName = genreNameEditText.getText().toString();
@@ -143,12 +194,29 @@ public class GenresFragment extends Fragment {
     }
 
     private void showDeleteConfirmationDialog(Genre genre) {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Удалить жанр")
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog);
+        builder.setTitle("Удалить жанр")
                 .setMessage("Вы уверены, что хотите удалить жанр " + genre.getName() + "?")
                 .setPositiveButton("Удалить", (dialog, which) -> deleteGenre(genre))
-                .setNegativeButton("Отмена", null)
-                .show();
+                .setNegativeButton("Отмена", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+            positiveButton.setTextColor(Color.WHITE);
+            positiveButton.setBackgroundColor(Color.parseColor("#800020"));
+
+            negativeButton.setTextColor(Color.WHITE);
+            negativeButton.setBackgroundColor(Color.parseColor("#800020"));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+            }
+        });
+
+        dialog.show();
     }
 
     private void deleteGenre(Genre genre) {

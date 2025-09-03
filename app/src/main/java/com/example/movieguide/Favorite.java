@@ -4,7 +4,6 @@ public class Favorite {
     private String userId;
     private String contentId;
 
-    // Обязательный пустой конструктор для Firestore
     public Favorite() {}
 
     public Favorite(String userId, String contentId) {
@@ -12,7 +11,6 @@ public class Favorite {
         this.contentId = contentId;
     }
 
-    // Геттеры и сеттеры
     public String getUserId() {
         return userId;
     }

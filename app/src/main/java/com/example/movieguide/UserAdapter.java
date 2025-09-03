@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -59,26 +60,78 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.textViewRole.setText(user.getRole());
 
         if (user.isBlocked()) {
-            holder.buttonBlock.setText("Заблокирован");
-            holder.buttonBlock.setEnabled(false);
+            holder.buttonBlock.setText("Разблокировать");
+            holder.buttonBlock.setOnClickListener(v -> showUnblockUserDialog(user, position));
         } else {
             holder.buttonBlock.setText("Заблокировать");
-            holder.buttonBlock.setEnabled(true);
+            holder.buttonBlock.setOnClickListener(v -> showBlockUserDialog(user, position));
         }
-
-        holder.buttonBlock.setOnClickListener(v -> showBlockUserDialog(user, position));
     }
 
     private void showBlockUserDialog(User user, int position) {
-        new AlertDialog.Builder(context)
+        AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Подтверждение блокировки")
                 .setMessage("Выслать предупреждение и заблокировать пользователя " + user.getEmail() + "?")
-                .setPositiveButton("Подтвердить", (dialog, which) -> {
+                .setPositiveButton("Подтвердить", (dialogInterface, which) -> {
                     blockUser(user, position);
-                    sendWarningEmail(user.getEmail(), user.getName());
+                    sendWarningEmail(user.getEmail(), user.getName(), true);
                 })
                 .setNegativeButton("Отмена", null)
-                .show();
+                .create();
+
+        styleDialog(dialog);
+        dialog.show();
+    }
+
+    private void showUnblockUserDialog(User user, int position) {
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle("Подтверждение разблокировки")
+                .setMessage("Разблокировать пользователя " + user.getEmail() + "?")
+                .setPositiveButton("Подтвердить", (dialogInterface, which) -> {
+                    unblockUser(user, position);
+                    sendWarningEmail(user.getEmail(), user.getName(), false);
+                })
+                .setNegativeButton("Отмена", null)
+                .create();
+
+        styleDialog(dialog);
+        dialog.show();
+    }
+
+    private void styleDialog(AlertDialog dialog) {
+        dialog.setOnShowListener(dialogInterface -> {
+            View background = dialog.getWindow().getDecorView().getRootView();
+            background.setBackgroundColor(ContextCompat.getColor(context, R.color.background_dark));
+
+            int titleId = context.getResources().getIdentifier("alertTitle", "id", "android");
+            if (titleId > 0) {
+                TextView titleView = dialog.findViewById(titleId);
+                if (titleView != null) {
+                    titleView.setTextColor(ContextCompat.getColor(context, R.color.text_light));
+                }
+            }
+
+            TextView messageView = dialog.findViewById(android.R.id.message);
+            if (messageView != null) {
+                messageView.setTextColor(ContextCompat.getColor(context, R.color.text_light));
+            }
+
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            positiveButton.setTextColor(ContextCompat.getColor(context, R.color.white));
+            positiveButton.setBackgroundColor(ContextCompat.getColor(context, R.color.burgundy_primary));
+
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            negativeButton.setTextColor(ContextCompat.getColor(context, R.color.white));
+            negativeButton.setBackgroundColor(ContextCompat.getColor(context, R.color.burgundy_primary));
+
+            int dividerId = context.getResources().getIdentifier("titleDivider", "id", "android");
+            if (dividerId > 0) {
+                View divider = dialog.findViewById(dividerId);
+                if (divider != null) {
+                    divider.setBackgroundColor(ContextCompat.getColor(context, R.color.burgundy_primary));
+                }
+            }
+        });
     }
 
     private void blockUser(User user, int position) {
@@ -97,7 +150,23 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 });
     }
 
-    private void sendWarningEmail(String email, String userName) {
+    private void unblockUser(User user, int position) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("isBlocked", false);
+
+        db.collection("users").document(user.getUserId())
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    user.setBlocked(false);
+                    notifyItemChanged(position);
+                    Toast.makeText(context, "Пользователь разблокирован", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Ошибка разблокировки: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void sendWarningEmail(String email, String userName, boolean isBlocked) {
         executorService.execute(() -> {
             try {
                 String host = "smtp.gmail.com";
@@ -121,9 +190,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-                message.setSubject("Ваш аккаунт заблокирован");
-                message.setText("Уважаемый " + userName + ",\n\nВаш аккаунт был заблокирован администратором за нарушение правил.\n" +
-                        "По всем вопросам обращайтесь в поддержку.");
+
+                if (isBlocked) {
+                    message.setSubject("Ваш аккаунт заблокирован");
+                    message.setText("Уважаемый " + userName + ",\n\nВаш аккаунт был заблокирован администратором за нарушение правил.\n" +
+                            "По всем вопросам обращайтесь в поддержку.");
+                } else {
+                    message.setSubject("Ваш аккаунт разблокирован");
+                    message.setText("Уважаемый " + userName + ",\n\nВаш аккаунт был разблокирован администратором.\n" +
+                            "Теперь вы снова можете пользоваться сервисом.");
+                }
 
                 Transport.send(message);
 

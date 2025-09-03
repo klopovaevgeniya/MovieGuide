@@ -6,14 +6,12 @@
     android:layout_height="match_parent"
     android:background="@color/background_dark">
 
-    <!-- Основной контент -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Строка поиска с кнопкой фильтра -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +45,6 @@
                 app:tint="@color/white" />
         </RelativeLayout>
 
-        <!-- Сообщение "Ничего не найдено" -->
         <TextView
             android:id="@+id/textViewNoResults"
             android:layout_width="wrap_content"
@@ -59,7 +56,6 @@
             android:textSize="18sp"
             android:visibility="gone" />
 
-        <!-- Список контента -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -70,7 +66,6 @@
             tools:listitem="@layout/item_content_admin" />
     </LinearLayout>
 
-    <!-- Overlay для затемнения фона -->
     <View
         android:id="@+id/overlayView"
         android:layout_width="match_parent"
@@ -81,7 +76,6 @@
         android:focusable="true"
         android:visibility="gone" />
 
-    <!-- Боковое меню фильтров -->
     <LinearLayout
         android:id="@+id/filtersMenu"
         android:layout_width="280dp"
@@ -102,7 +96,6 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <!-- Фильтр по жанрам -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,7 +119,6 @@
             android:layout_marginBottom="16dp"
             android:orientation="vertical" />
 
-        <!-- Фильтр по типу контента -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -150,7 +142,6 @@
             android:layout_marginBottom="16dp"
             android:orientation="vertical" />
 
-        <!-- Фильтр по рейтингу -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -176,7 +167,6 @@
             android:textAlignment="center"
             android:textColor="@color/white" />
 
-        <!-- Кнопки действий -->
         <Button
             android:id="@+id/applyFiltersButton"
             android:layout_width="match_parent"

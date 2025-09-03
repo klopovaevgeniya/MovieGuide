@@ -1,6 +1,7 @@
 package com.example.movieguide;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -254,7 +255,7 @@ public class ContentFragment extends Fragment implements ContentAdapter.OnConten
         content.put("title", title);
         content.put("description", description);
         content.put("genre", genre);
-        content.put("contentType", contentType); // Новое поле
+        content.put("contentType", contentType);
         content.put("imageUrl", imageUrl);
         content.put("trailerUrl", trailerUrl);
 
@@ -262,7 +263,7 @@ public class ContentFragment extends Fragment implements ContentAdapter.OnConten
                 .update(content)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Контент обновлен", Toast.LENGTH_SHORT).show();
-                    loadContentFromFirestore(); // Обновляем список
+                    loadContentFromFirestore();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Ошибка обновления: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -270,12 +271,27 @@ public class ContentFragment extends Fragment implements ContentAdapter.OnConten
     }
 
     private void showDeleteConfirmationDialog(Content content) {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Подтверждение удаления")
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog);
+        builder.setTitle("Подтверждение удаления")
                 .setMessage("Вы уверены, что хотите удалить этот контент?")
                 .setPositiveButton("Да", (dialog, which) -> deleteContentFromFirestore(content))
-                .setNegativeButton("Нет", null)
-                .show();
+                .setNegativeButton("Нет", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.black);
+
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+            positiveButton.setTextColor(Color.WHITE);
+            positiveButton.setBackgroundColor(Color.parseColor("#800020"));
+
+            negativeButton.setTextColor(Color.WHITE);
+            negativeButton.setBackgroundColor(Color.parseColor("#800020"));
+        });
+
+        dialog.show();
     }
 
     private void deleteContentFromFirestore(Content content) {

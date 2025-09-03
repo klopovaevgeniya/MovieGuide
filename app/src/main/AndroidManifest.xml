@@ -32,6 +32,7 @@
         <activity android:name=".ContentDetailActivity"/>
         <activity android:name=".HistoryActivity"/>
         <activity android:name=".ProfileActivity"/>
+        <activity android:name=".AppRulesActivity"/>
 
     </application>
 

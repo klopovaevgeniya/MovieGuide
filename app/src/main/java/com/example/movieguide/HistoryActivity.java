@@ -1,6 +1,7 @@
 package com.example.movieguide;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -15,12 +16,20 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -249,13 +258,38 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void showReviewDialog(Content content) {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "Необходимо авторизоваться", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        db.collection("reviews")
+                .whereEqualTo("contentId", content.getId())
+                .whereEqualTo("userId", currentUser.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            Toast.makeText(this, "Вы уже оставили отзыв", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        showReviewInputDialog(content);
+                    } else {
+                        Toast.makeText(this, "Ошибка проверки отзывов", Toast.LENGTH_SHORT).show();
+                        Log.e("Review", "Error checking reviews", task.getException());
+                    }
+                });
+    }
+
+    private void showReviewInputDialog(Content content) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Оставить отзыв");
 
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_review, null);
         builder.setView(dialogView);
 
-        EditText reviewInput = dialogView .findViewById(R.id.review_input);
+        EditText reviewInput = dialogView.findViewById(R.id.review_input);
         RatingBar ratingBar = dialogView.findViewById(R.id.rating_bar);
 
         ratingBar.setStepSize(1.0f);
@@ -381,5 +415,52 @@ public class HistoryActivity extends AppCompatActivity {
     private void showContentList() {
         emptyStateText.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
+    }
+    private void updateContentStats(String contentId, String contentTitle, int rating, Context context) {
+        if (rating < 1 || rating > 5) {
+            Log.e("Stats", "Invalid rating value: " + rating);
+            if (context != null) {
+                Toast.makeText(context, "Некорректная оценка", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
+        DatabaseReference contentStatsRef = FirebaseDatabase.getInstance()
+                .getReference("stats")
+                .child(contentId);
+
+        contentStatsRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Stats stats = mutableData.getValue(Stats.class);
+                if (stats == null) {
+                    stats = new Stats(contentId, contentTitle);
+                }
+                stats.addRating(rating);
+                mutableData.setValue(stats);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                if (databaseError != null) {
+                    Log.e("Stats", "Error updating stats", databaseError.toException());
+                    if (context != null) {
+                        Toast.makeText(context, "Ошибка обновления статистики: " + databaseError.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else if (!committed) {
+                    Log.w("Stats", "Stats update not committed");
+                    if (context != null) {
+                        Toast.makeText(context, "Не удалось обновить статистику",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.d("Stats", "Stats updated successfully");
+
+                }
+            }
+        });
     }
 }

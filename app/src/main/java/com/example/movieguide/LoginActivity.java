@@ -10,6 +10,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,7 +59,22 @@ public class LoginActivity extends AppCompatActivity {
                             checkUserRoleAndBlockStatus(user.getUid());
                         }
                     } else {
-                        Toast.makeText(this, "Ошибка авторизации: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        String errorMessage = "Ошибка авторизации";
+                        Exception exception = task.getException();
+
+                        if (exception instanceof FirebaseAuthInvalidUserException) {
+                            errorMessage = "Пользователь с таким email не найден";
+                        } else if (exception instanceof FirebaseAuthInvalidCredentialsException) {
+                            errorMessage = "Неверный логин или пароль";
+                        } else if (exception != null && exception.getMessage() != null) {
+                            if (exception.getMessage().contains("INVALID_EMAIL")) {
+                                errorMessage = "Некорректный email";
+                            } else if (exception.getMessage().contains("USER_DISABLED")) {
+                                errorMessage = "Аккаунт заблокирован";
+                            }
+                        }
+
+                        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -82,14 +99,14 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Ошибка: данные пользователя не найдены", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(e ->
-                Toast.makeText(this, "Ошибка загрузки данных: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Ошибка загрузки данных", Toast.LENGTH_SHORT).show()
         );
     }
 
     private void showBlockedDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomAlertDialog);
         builder.setTitle("Аккаунт заблокирован");
-        builder.setMessage("Аккаунт, зарегестрированный по данной почте, был заблокирован.");
+        builder.setMessage("Аккаунт, зарегистрированный по данной почте, был заблокирован.");
         builder.setPositiveButton("ОК", (dialog, which) -> {
             auth.signOut();
             startActivity(new Intent(this, LoginActivity.class));
